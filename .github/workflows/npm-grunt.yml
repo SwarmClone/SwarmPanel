@@ -1,4 +1,4 @@
-name: Build and Package NPM Project
+name: Build and Package Vite + Vue NPM Project
 
 on:
   push:
@@ -12,31 +12,31 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: |
-        npm install --include=dev
+      - name: Install dependencies
+        run: |
+          npm install
 
-    - name: Run Grunt Build
-      run: |
-        npx grunt
+      - name: Build with Vite
+        run: |
+          npm run build
 
-    - name: Package as ZIP (optional)
-      run: |
-        zip -r dist.zip dist/
+      - name: Package dist as ZIP
+        run: |
+          zip -r dist.zip dist/
 
-    - name: Upload ZIP as Artifact (optional)
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist-${{ matrix.node-version }}
-        path: dist/
+      - name: Upload ZIP as Artifact (using v2)
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-${{ matrix.node-version }}
+          path: dist/
