@@ -36,7 +36,7 @@ jobs:
           zip -r dist.zip dist/
 
       - name: Upload ZIP as Artifact (using v2)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: dist-${{ matrix.node-version }}
           path: dist/
