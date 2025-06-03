@@ -18,7 +18,7 @@
 }
 
 :root {
-  background-color: #EEEEEE;
+  background-color: #FFFFFF;
   color: black;
 }
 </style>

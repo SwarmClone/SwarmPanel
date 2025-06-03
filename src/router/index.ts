@@ -1,17 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SplashScreen from '../views/SplashScreen.vue';
-import ASRDummy from '../views/ASRDummy.vue';
+import HomeView from '../views/HomeView.vue';
+import ChatView from '../views/ChatView.vue';
+import SettingsView from '../views/SettingsView.vue';
+import OtherView from '../views/OtherView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'SplashScreen',
-    component: SplashScreen
+    name: 'Home',
+    component: HomeView
   },
   {
     path: '/asr-dummy',
-    name: 'ASRDummy',
-    component: ASRDummy
+    name: 'Chat',
+    component: ChatView
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: SettingsView
+  },
+  {
+    path: '/other',
+    name: 'Other',
+    component: OtherView
   }
 ];
 
