@@ -8,17 +8,13 @@
 <style>
 /* 引入字体 */
 @font-face {
-  font-family: 'HarmonySansBlack';
-  src: url('./assets/font/HarmonyOS_Sans_SC_Black.ttf') format('truetype');
+  font-family: 'MiSans-Demibold';
+  src: url('./assets/font/MiSans-Demibold.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'Righteous';
-  src: url('./assets/font/Righteous.ttf') format('truetype');
-}
-
-:root {
-  background-color: #FFFFFF;
-  color: black;
+* {
+  font-family: 'MiSans-Demibold', sans-serif;
+  background-color: #171717;
+  color: #FFFFFF;
 }
 </style>

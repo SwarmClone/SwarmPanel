@@ -6,6 +6,6 @@ export async function getLastestVersion(host: string = '127.0.0.1', port: string
     return response.data.version;
   } catch (error) {
     console.error('无法向后端获取当前程序版本:', error);
-    return '0.0';
+    return 'error';
   }
 }
