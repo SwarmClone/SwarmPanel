@@ -1,14 +1,14 @@
 import { reactive, watch } from 'vue';
-import type { StartupConfig } from '@/types/startup';
+import type { ConfigItem, Module, Role, StartupConfig } from '@/types/startup';
 
 const store = reactive<Record<string, any>>({});
 const key = (r: string, m: string, c: string) => `${r}.${m}.${c}`;
 
 // 初始化
 export const initStore = (cfg: StartupConfig) => {
-  cfg.forEach(role =>
-    role.modules.forEach(mod =>
-      mod.config.forEach(item => {
+  cfg.forEach((role: Role) =>
+    role.modules.forEach((mod: Module) =>
+      mod.config.forEach((item: ConfigItem) => {
         if (!(key(role.role_name, mod.module_name, item.name) in store)) {
           store[key(role.role_name, mod.module_name, item.name)] = item.default;
         }

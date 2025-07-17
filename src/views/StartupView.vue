@@ -35,13 +35,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, h, nextTick } from 'vue';
+import { ref, onMounted, h} from 'vue';
 import axios from 'axios';
 import { notification } from 'ant-design-vue';
 import { LoadingOutlined } from '@ant-design/icons-vue';
 import StartupForm from '@/components/startup/StartupForm.vue';
 import type { StartupConfig } from '@/types/startup';
-import type { NotificationPlacement } from 'ant-design-vue';
 
 const indicator = h(LoadingOutlined, { style: { fontSize: '50px', color: '#548AF7' }, spin: true });
 
