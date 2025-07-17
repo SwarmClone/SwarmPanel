@@ -27,7 +27,6 @@
 
     <!-- 表单 -->
     <StartupForm
-      v-if="!showLoading"
       ref="startupFormRef"
       :config="startupConfig"
     />
