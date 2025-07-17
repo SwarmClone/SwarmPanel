@@ -14,7 +14,5 @@
 
 * {
   font-family: 'MiSans-Demibold', sans-serif;
-  background-color: #171717;
-  color: #FFFFFF;
 }
 </style>

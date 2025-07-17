@@ -1,0 +1,1152 @@
+[
+    {
+        "role_name": "LLM",
+        "modules": [
+            {
+                "module_name": "LLMBase",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "chat_maxsize",
+                        "type": "int",
+                        "desc": "弹幕接受数量上限",
+                        "required": false,
+                        "default": 20,
+                        "options": [],
+                        "min": 1,
+                        "max": 1000,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_size_threshold",
+                        "type": "int",
+                        "desc": "弹幕逐条回复数量上限",
+                        "required": false,
+                        "default": 10,
+                        "options": [],
+                        "min": 1,
+                        "max": 100,
+                        "step": null
+                    },
+                    {
+                        "name": "do_start_topic",
+                        "type": "bool",
+                        "desc": "是否自动发起对话",
+                        "required": false,
+                        "default": false,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "idle_timeout",
+                        "type": "float",
+                        "desc": "自动发起对话时间间隔",
+                        "required": false,
+                        "default": 120,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 600,
+                        "step": 1.0
+                    },
+                    {
+                        "name": "asr_timeout",
+                        "type": "int",
+                        "desc": "语音识别超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "tts_timeout",
+                        "type": "int",
+                        "desc": "语音合成超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_role",
+                        "type": "str",
+                        "desc": "弹幕对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_role",
+                        "type": "str",
+                        "desc": "语音输入对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_template",
+                        "type": "str",
+                        "desc": "弹幕的提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_template",
+                        "type": "str",
+                        "desc": "语音输入提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "system_prompt",
+                        "type": "str",
+                        "desc": "系统提示词",
+                        "required": false,
+                        "default": "你是一只猫娘",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            },
+            {
+                "module_name": "LLMDummy",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "chat_maxsize",
+                        "type": "int",
+                        "desc": "弹幕接受数量上限",
+                        "required": false,
+                        "default": 20,
+                        "options": [],
+                        "min": 1,
+                        "max": 1000,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_size_threshold",
+                        "type": "int",
+                        "desc": "弹幕逐条回复数量上限",
+                        "required": false,
+                        "default": 10,
+                        "options": [],
+                        "min": 1,
+                        "max": 100,
+                        "step": null
+                    },
+                    {
+                        "name": "do_start_topic",
+                        "type": "bool",
+                        "desc": "是否自动发起对话",
+                        "required": false,
+                        "default": false,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "idle_timeout",
+                        "type": "float",
+                        "desc": "自动发起对话时间间隔",
+                        "required": false,
+                        "default": 120,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 600,
+                        "step": 1.0
+                    },
+                    {
+                        "name": "asr_timeout",
+                        "type": "int",
+                        "desc": "语音识别超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "tts_timeout",
+                        "type": "int",
+                        "desc": "语音合成超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_role",
+                        "type": "str",
+                        "desc": "弹幕对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_role",
+                        "type": "str",
+                        "desc": "语音输入对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_template",
+                        "type": "str",
+                        "desc": "弹幕的提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_template",
+                        "type": "str",
+                        "desc": "语音输入提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "system_prompt",
+                        "type": "str",
+                        "desc": "系统提示词",
+                        "required": false,
+                        "default": "你是一只猫娘",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            },
+            {
+                "module_name": "LLMTransformers",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "chat_maxsize",
+                        "type": "int",
+                        "desc": "弹幕接受数量上限",
+                        "required": false,
+                        "default": 20,
+                        "options": [],
+                        "min": 1,
+                        "max": 1000,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_size_threshold",
+                        "type": "int",
+                        "desc": "弹幕逐条回复数量上限",
+                        "required": false,
+                        "default": 10,
+                        "options": [],
+                        "min": 1,
+                        "max": 100,
+                        "step": null
+                    },
+                    {
+                        "name": "do_start_topic",
+                        "type": "bool",
+                        "desc": "是否自动发起对话",
+                        "required": false,
+                        "default": false,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "idle_timeout",
+                        "type": "float",
+                        "desc": "自动发起对话时间间隔",
+                        "required": false,
+                        "default": 120,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 600,
+                        "step": 1.0
+                    },
+                    {
+                        "name": "asr_timeout",
+                        "type": "int",
+                        "desc": "语音识别超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "tts_timeout",
+                        "type": "int",
+                        "desc": "语音合成超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_role",
+                        "type": "str",
+                        "desc": "弹幕对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_role",
+                        "type": "str",
+                        "desc": "语音输入对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_template",
+                        "type": "str",
+                        "desc": "弹幕的提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_template",
+                        "type": "str",
+                        "desc": "语音输入提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "system_prompt",
+                        "type": "str",
+                        "desc": "系统提示词",
+                        "required": false,
+                        "default": "你是一只猫娘",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_path",
+                        "type": "str",
+                        "desc": "情感分类模型路径",
+                        "required": false,
+                        "default": "~/.swarmclone/llm/EmotionClassification/SWCBiLSTM",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_id",
+                        "type": "str",
+                        "desc": "情感分类模型id",
+                        "required": false,
+                        "default": "MomoiaMoia/SWCBiLSTM",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_source",
+                        "type": "selection",
+                        "desc": "情感分类模型来源，仅支持huggingface或modelscope",
+                        "required": false,
+                        "default": "modelscope",
+                        "options": [
+                            "huggingface",
+                            "modelscope"
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_path",
+                        "type": "str",
+                        "desc": "模型路径",
+                        "required": false,
+                        "default": "~/.swarmclone/llm/MiniLM2/MiniLM2-nGPT-0.4b-instruct",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_id",
+                        "type": "str",
+                        "desc": "模型id",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_source",
+                        "type": "selection",
+                        "desc": "语言模型来源，仅支持huggingface或modelscope",
+                        "required": false,
+                        "default": "modelscope",
+                        "options": [
+                            "huggingface",
+                            "modelscope"
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "stop_string",
+                        "type": "str",
+                        "desc": "模型输出停止符",
+                        "required": false,
+                        "default": "\\n\\n\\n",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "float",
+                        "desc": "模型温度",
+                        "required": false,
+                        "default": 0.5,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.1
+                    },
+                    {
+                        "name": "device",
+                        "type": "selection",
+                        "desc": "模型运行设备",
+                        "required": false,
+                        "default": "cuda:0",
+                        "options": [
+                            {
+                                "key": "cuda:0",
+                                "value": "NVIDIA GeForce RTX 3060 Laptop GPU"
+                            },
+                            {
+                                "key": "cpu",
+                                "value": "CPU"
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            },
+            {
+                "module_name": "LLMOpenAI",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "chat_maxsize",
+                        "type": "int",
+                        "desc": "弹幕接受数量上限",
+                        "required": false,
+                        "default": 20,
+                        "options": [],
+                        "min": 1,
+                        "max": 1000,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_size_threshold",
+                        "type": "int",
+                        "desc": "弹幕逐条回复数量上限",
+                        "required": false,
+                        "default": 10,
+                        "options": [],
+                        "min": 1,
+                        "max": 100,
+                        "step": null
+                    },
+                    {
+                        "name": "do_start_topic",
+                        "type": "bool",
+                        "desc": "是否自动发起对话",
+                        "required": false,
+                        "default": false,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "idle_timeout",
+                        "type": "float",
+                        "desc": "自动发起对话时间间隔",
+                        "required": false,
+                        "default": 120,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 600,
+                        "step": 1.0
+                    },
+                    {
+                        "name": "asr_timeout",
+                        "type": "int",
+                        "desc": "语音识别超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "tts_timeout",
+                        "type": "int",
+                        "desc": "语音合成超时时间",
+                        "required": false,
+                        "default": 60,
+                        "options": [],
+                        "min": 1,
+                        "max": 3600,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_role",
+                        "type": "str",
+                        "desc": "弹幕对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_role",
+                        "type": "str",
+                        "desc": "语音输入对应的聊天角色",
+                        "required": false,
+                        "default": "user",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "chat_template",
+                        "type": "str",
+                        "desc": "弹幕的提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "asr_template",
+                        "type": "str",
+                        "desc": "语音输入提示词模板",
+                        "required": false,
+                        "default": "{user}: {content}",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "system_prompt",
+                        "type": "str",
+                        "desc": "系统提示词",
+                        "required": false,
+                        "default": "你是一只猫娘",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_path",
+                        "type": "str",
+                        "desc": "情感分类模型路径",
+                        "required": false,
+                        "default": "~/.swarmclone/llm/EmotionClassification/SWCBiLSTM",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_id",
+                        "type": "str",
+                        "desc": "情感分类模型id",
+                        "required": false,
+                        "default": "MomoiaMoia/SWCBiLSTM",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "classifier_model_source",
+                        "type": "str",
+                        "desc": "情感分类模型来源，仅支持huggingface或modelscope",
+                        "required": false,
+                        "default": "modelscope",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_id",
+                        "type": "str",
+                        "desc": "模型id",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_url",
+                        "type": "str",
+                        "desc": "模型api网址",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "api_key",
+                        "type": "str",
+                        "desc": "api key",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "float",
+                        "desc": "模型温度",
+                        "required": false,
+                        "default": 0.7,
+                        "options": [
+                            {
+                                "key": "0.7",
+                                "value": 0.7
+                            },
+                            {
+                                "key": "0.9",
+                                "value": 0.9
+                            },
+                            {
+                                "key": "1.0",
+                                "value": 1.0
+                            }
+                        ],
+                        "min": 0.0,
+                        "max": 1.0,
+                        "step": 0.1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "role_name": "TTS",
+        "modules": [
+            {
+                "module_name": "TTSCosyvoice",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "sft_model",
+                        "type": "str",
+                        "desc": "语音微调模型",
+                        "required": false,
+                        "default": "CosyVoice-300M-SFT",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "ins_model",
+                        "type": "str",
+                        "desc": "语音指令模型",
+                        "required": false,
+                        "default": "CosyVoice-300M-Instruct",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "tune",
+                        "type": "str",
+                        "desc": "音色",
+                        "required": false,
+                        "default": "知络_1.2",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_path",
+                        "type": "str",
+                        "desc": "语音模型路径",
+                        "required": false,
+                        "default": "~/.swarmclone/tts_cosy_voice",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "float16",
+                        "type": "bool",
+                        "desc": "是否启用量化",
+                        "required": false,
+                        "default": true,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "role_name": "Frontend",
+        "modules": [
+            {
+                "module_name": "FrontendDummy",
+                "desc": "",
+                "config": []
+            },
+            {
+                "module_name": "FrontendSocket",
+                "desc": "连接到Unity前端的接口模块",
+                "config": [
+                    {
+                        "name": "host",
+                        "type": "str",
+                        "desc": "监听地址，默认监听所有地址，如需仅监听本地地址则设置为127.0.0.1",
+                        "required": false,
+                        "default": "0.0.0.0",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "port",
+                        "type": "int",
+                        "desc": "监听端口，最好不要改",
+                        "required": false,
+                        "default": 8002,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "sep",
+                        "type": "str",
+                        "desc": "消息分隔符，最好不要改",
+                        "required": false,
+                        "default": "%SEP%",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            },
+            {
+                "module_name": "NCatBotFrontend",
+                "desc": "",
+                "config": []
+            }
+        ]
+    },
+    {
+        "role_name": "ASR",
+        "modules": [
+            {
+                "module_name": "ASRSherpa",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "host",
+                        "type": "str",
+                        "desc": "监听地址，默认监听所有地址，如需仅监听本地地址则设置为127.0.0.1",
+                        "required": false,
+                        "default": "0.0.0.0",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "port",
+                        "type": "int",
+                        "desc": "监听端口，默认8004",
+                        "required": false,
+                        "default": 8004,
+                        "options": [],
+                        "min": 1,
+                        "max": 65535,
+                        "step": null
+                    },
+                    {
+                        "name": "userdb",
+                        "type": "str",
+                        "desc": "用户名以及密码（按JSON格式输入，用户名作为key，密码作为value）",
+                        "required": false,
+                        "default": {
+                            "DeveloperA": "12345"
+                        },
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model",
+                        "type": "selection",
+                        "desc": "语音识别模型id",
+                        "required": false,
+                        "default": "zipformer",
+                        "options": [
+                            {
+                                "key": "Zipformer",
+                                "value": "zipformer"
+                            },
+                            {
+                                "key": "Paraformer",
+                                "value": "paraformer"
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "quantized",
+                        "type": "selection",
+                        "desc": "语音识别模型精度",
+                        "required": false,
+                        "default": "fp32",
+                        "options": [
+                            {
+                                "key": "32位浮点",
+                                "value": "fp32"
+                            },
+                            {
+                                "key": "8位整型",
+                                "value": "int8"
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "model_path",
+                        "type": "str",
+                        "desc": "语音识别模型位置",
+                        "required": false,
+                        "default": "~/.swarmclone/asr/",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "decoding_method",
+                        "type": "selection",
+                        "desc": "解码方式",
+                        "required": false,
+                        "default": "greedy_search",
+                        "options": [
+                            {
+                                "key": "贪心搜索",
+                                "value": "greedy_search"
+                            },
+                            {
+                                "key": "束搜索",
+                                "value": "beam_search"
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "provider",
+                        "type": "selection",
+                        "desc": "语音识别模型运行设备",
+                        "required": false,
+                        "default": "cuda:0",
+                        "options": [
+                            {
+                                "key": "cuda:0",
+                                "value": "NVIDIA GeForce RTX 3060 Laptop GPU"
+                            },
+                            {
+                                "key": "cpu",
+                                "value": "CPU"
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "hotwords_file",
+                        "type": "str",
+                        "desc": "热词文件路径",
+                        "required": false,
+                        "default": "",
+                        "options": [
+                            {
+                                "key": "不使用热词",
+                                "value": ""
+                            }
+                        ],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "hotwords_score",
+                        "type": "float",
+                        "desc": "热词分数",
+                        "required": false,
+                        "default": 1.5,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 10.0,
+                        "step": 0.1
+                    },
+                    {
+                        "name": "blank_penalty",
+                        "type": "float",
+                        "desc": "空白惩罚",
+                        "required": false,
+                        "default": 0.0,
+                        "options": [],
+                        "min": 0.0,
+                        "max": 10.0,
+                        "step": 0.1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "role_name": "Chat",
+        "modules": [
+            {
+                "module_name": "BiliBiliChat",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "live_room_id",
+                        "type": "int",
+                        "desc": "目标B站直播间ID",
+                        "required": true,
+                        "default": 0,
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "sessdata",
+                        "type": "str",
+                        "desc": "见https://nemo2011.github.io/bilibili-api/#/get-credential，可不填",
+                        "required": false,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "bili_jct",
+                        "type": "str",
+                        "desc": "见https://nemo2011.github.io/bilibili-api/#/get-credential，可不填",
+                        "required": false,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "buvid3",
+                        "type": "str",
+                        "desc": "见https://nemo2011.github.io/bilibili-api/#/get-credential，可不填",
+                        "required": false,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "dedeuserid",
+                        "type": "str",
+                        "desc": "见https://nemo2011.github.io/bilibili-api/#/get-credential，可不填",
+                        "required": false,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "ac_time_value",
+                        "type": "str",
+                        "desc": "见https://nemo2011.github.io/bilibili-api/#/get-credential，可不填",
+                        "required": false,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            },
+            {
+                "module_name": "NCatBotChat",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "target_group_id",
+                        "type": "str",
+                        "desc": "模板群号",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "bot_id",
+                        "type": "str",
+                        "desc": "机器人QQ号",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    },
+                    {
+                        "name": "root_id",
+                        "type": "str",
+                        "desc": "管理员QQ号",
+                        "required": true,
+                        "default": "",
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "role_name": "Plugin",
+        "modules": [
+            {
+                "module_name": "ScheduledPlaylist",
+                "desc": "",
+                "config": [
+                    {
+                        "name": "playlist",
+                        "type": "str",
+                        "desc": "定时播放列表，按JSON格式填写：{\"【歌曲名字】\":{\"file_name\":\"【歌曲文件路径】\",\"subtitle\":\"【歌曲字幕路径】\",\"start_time\":【歌曲开始播放时间戳】}}",
+                        "required": false,
+                        "default": {},
+                        "options": [],
+                        "min": null,
+                        "max": null,
+                        "step": null
+                    }
+                ]
+            }
+        ]
+    }
+]
