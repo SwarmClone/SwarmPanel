@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 export const selectedModules = reactive<Record<string, Set<string>>>({});
 
@@ -42,4 +42,14 @@ export const collectFiltered = (
     });
   });
   return res;
+};
+
+export const highlightedKey = ref<string | null>(null);
+
+export const highlightModule = (role: string, module: string) => {
+  highlightedKey.value = `${role}.${module}`;
+};
+
+export const clearHighlight = () => {
+  highlightedKey.value = null;
 };
