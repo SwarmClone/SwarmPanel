@@ -175,7 +175,7 @@
                         "options": [],
                         "min": 0.0,
                         "max": 600,
-                        "step": 1.0
+                        "step": 0.2
                     },
                     {
                         "name": "asr_timeout",

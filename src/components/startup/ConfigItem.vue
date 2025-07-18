@@ -11,6 +11,7 @@
         :min="config.min"
         :max="config.max"
         :step="computedStep"
+        :disabled="disabled"
       />
       <a-input-number
         v-model:value="value"
@@ -18,6 +19,7 @@
         :max="config.max"
         :step="computedStep"
         :precision="precision"
+        :disabled="disabled"
         style="width: 100%; margin-top: 8px;"
       />
     </template>
@@ -30,17 +32,30 @@
       :max="config.max"
       :step="computedStep"
       :precision="precision"
+      :disabled="disabled"
       style="width: 100%;"
     />
 
     <!-- 字符串 -->
-    <a-input v-else-if="config.type === 'str'" v-model:value="value" />
+    <a-input
+      v-else-if="config.type === 'str'"
+      v-model:value="value"
+      :disabled="disabled"
+    />
 
     <!-- 布尔 -->
-    <a-switch v-else-if="config.type === 'bool'" v-model:checked="value" />
+    <a-switch
+      v-else-if="config.type === 'bool'"
+      v-model:checked="value"
+      :disabled="disabled"
+    />
 
     <!-- 选择 -->
-    <a-select v-else-if="config.type === 'selection'" v-model:value="value">
+    <a-select
+      v-else-if="config.type === 'selection'"
+      v-model:value="value"
+      :disabled="disabled"
+    >
       <a-select-option
         v-for="opt in config.options"
         :key="opt.value"
@@ -69,6 +84,7 @@ const props = defineProps<{
   roleName: string;
   moduleName: string;
   configName: string;
+  disabled?: boolean;
 }>();
 
 /* 双向绑定到全局 store */
@@ -77,7 +93,6 @@ const value = computed({
   set: (val) => setVal(props.roleName, props.moduleName, props.configName, val),
 });
 
-/* 辅助展示 */
 const computedStep = computed(() =>
   props.config.step ?? (props.config.type === 'int' ? 1 : 0.01)
 );

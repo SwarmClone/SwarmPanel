@@ -1,35 +1,40 @@
 <template>
   <div class="startup-view">
-    <!-- 顶部导航 -->
-    <div class="header">
-      <h1 class="page-title">启动前参数设置</h1>
-      <div class="btn-group">
-        <a-button @click="handleSave" size="large">保存</a-button>
-        <a-button type="primary" @click="handleStart" size="large">启动</a-button>
-      </div>
-    </div>
-
-    <div
-      v-if="showLoading"
-      class="loading-mask"
-      :class="fadeClass"
-    >
-      <div class="loading-container">
-        <div class="title-wrapper">
-          <h1>蜂群克隆-控制面板</h1>
-          <p>版本: {{ version }}</p>
-        </div>
-        <div class="icon-wrapper">
-          <a-spin :indicator="indicator" size="large" />
+  <a-layout style="min-height: 100vh">
+    <!-- 侧边栏 -->
+    <Sidebar :config="startupConfig" />
+    <a-layout-content class="main-scroll">
+      <!-- 顶部导航 -->
+      <div class="header">
+        <p class="page-title">在左侧选择您需要启动的模块 在右侧配置选择要启动的模块的启动参数</p>
+        <div class="btn-group">
+          <a-button @click="handleSave" size="large">保存</a-button>
+          <a-button type="primary" @click="handleStart" size="large">启动</a-button>
         </div>
       </div>
-    </div>
 
-    <!-- 表单 -->
-    <StartupForm
-      ref="startupFormRef"
-      :config="startupConfig"
-    />
+      <div
+        v-if="showLoading"
+        class="loading-mask"
+        :class="fadeClass">
+        <div class="loading-container">
+          <div class="title-wrapper">
+            <h1>蜂群克隆-控制面板</h1>
+            <p>版本: {{ version }}</p>
+          </div>
+          <div class="icon-wrapper">
+            <a-spin :indicator="indicator" size="large" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 表单 -->
+      <StartupForm
+        ref="startupFormRef"
+        :config="startupConfig"
+      />
+    </a-layout-content>
+    </a-layout>
   </div>
 </template>
 
@@ -41,6 +46,8 @@ import { LoadingOutlined } from '@ant-design/icons-vue';
 import StartupForm from '@/components/startup/StartupForm.vue';
 import type { StartupConfig } from '@/types/startupConfig';
 import { initStore } from '@/composables/useConfigStore';
+import Sidebar from '@/components/startup/Sidebar.vue';
+import { collectSelected } from '@/composables/useSelectedModules';
 
 const indicator = h(LoadingOutlined, { style: { fontSize: '50px', color: '#548AF7' }, spin: true });
 
@@ -86,14 +93,18 @@ async function getStartupInfo() {
 }
 
 function handleSave() {
-  const values = startupFormRef.value?.collectValues();
-  console.log('保存的配置：', values);
+  const cfg = startupFormRef.value?.collectValues();
+  const selected = collectSelected();
+  console.log('保存的配置：', cfg);
+  console.log('勾选的模块：', selected);
   openNotification('success', '保存成功', '配置已暂存');
 }
 
 function handleStart() {
-  const values = startupFormRef.value?.collectValues();
-  console.log('启动的配置：', values);
+  const cfg = startupFormRef.value?.collectValues();
+  const selected = collectSelected();
+  console.log('启动的配置：', cfg);
+  console.log('勾选的模块：', selected);
   openNotification('success', '启动成功', '服务正在启动...');
 }
 
@@ -107,9 +118,15 @@ const openNotification = (
 </script>
 
 <style scoped>
-/* 全局居中 */
 .startup-view {
   padding: 20px;
+}
+
+.main-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 20px;
+  background-color: #FFFFFF;
 }
 
 .header {
@@ -120,9 +137,8 @@ const openNotification = (
 }
 
 .page-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #000;
+  font-size: 1rem;
+  font-weight: 200;
   margin: 0;
 }
 
@@ -134,7 +150,6 @@ const openNotification = (
 .loading-mask {
   position: fixed;
   inset: 0;
-  background: #fff;
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -157,9 +172,11 @@ const openNotification = (
   align-items: center;
   justify-content: center;
 }
+
 .title-wrapper h1 {
   margin: 0;
 }
+
 .title-wrapper p {
   margin: 4px 0 0;
   color: #666;
@@ -176,6 +193,7 @@ const openNotification = (
 .fade-out {
   animation: fade-out 0.3s ease forwards;
 }
+
 @keyframes fade-out {
   from { opacity: 1; }
   to   { opacity: 0; }
