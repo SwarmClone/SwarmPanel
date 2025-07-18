@@ -45,6 +45,7 @@ import type { StartupConfig } from '@/types/startupConfig';
 import { initStore } from '@/composables/useConfigStore';
 import Sidebar from '@/components/startup/Sidebar.vue';
 import { collectSelected } from '@/composables/useSelectedModules';
+import { saveConfig, startService } from '@/api/configSaveApi';
 
 const indicator = h(LoadingOutlined, {
   style: { fontSize: '50px', color: '#548AF7' },
@@ -91,20 +92,28 @@ async function getStartupInfo() {
   }
 }
 
-function handleSave() {
+async function handleSave() {
   const cfg = startupFormRef.value?.collectValues();
   const selected = collectSelected();
-  console.log('保存的配置：', cfg);
-  console.log('勾选的模块：', selected);
-  openNotification('success', '保存成功', '配置已暂存');
+  try {
+    const selectedModules = selected.flatMap(item => item.module);
+    await saveConfig(cfg, selectedModules);
+    openNotification('success', '保存成功', '配置已暂存');
+  } catch (e) {
+    openNotification('error', '保存失败', String(e));
+  }
 }
 
-function handleStart() {
+async function handleStart() {
   const cfg = startupFormRef.value?.collectValues();
   const selected = collectSelected();
-  console.log('启动的配置：', cfg);
-  console.log('勾选的模块：', selected);
-  openNotification('success', '启动成功', '服务正在启动...');
+  try {
+    const selectedModules = selected.flatMap(item => item.module);
+    await startService(cfg, selectedModules);
+    openNotification('success', '启动成功', '服务正在启动...');
+  } catch (e) {
+    openNotification('error', '启动失败', String(e));
+  }
 }
 
 const openNotification = (

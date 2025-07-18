@@ -4,7 +4,9 @@ from pathlib import Path
 from fastapi import FastAPI
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-
+from typing import Any, List
+from pydantic import BaseModel, Field
+    
 app = FastAPI()
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,6 +19,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+class Payload(BaseModel):
+    cfg: Any = Field(..., description="前端表单配置")
+    selected: List[str] = Field(..., description="勾选的模块")
+
 @app.get("/api/get_version")
 async def get_version():
     return {"version": "1.0.0"}
@@ -25,6 +31,18 @@ async def get_version():
 async def get_startup_parameters():
     with CONFIG_PATH.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+@app.post("/save")
+async def save_endpoint(data: Payload):
+    print("[/save] 收到的 JSON:")
+    print(json.dumps(data.model_dump(), ensure_ascii=False, indent=2))
+    return {"status": "saved"}
+
+@app.post("/start")
+async def start_endpoint(data: Payload):
+    print("[/start] 收到的 JSON:")
+    print(json.dumps(data.model_dump(), ensure_ascii=False, indent=2))
+    return {"status": "started"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
