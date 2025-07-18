@@ -16,5 +16,6 @@ import RoleSection from './RoleSection.vue';
 const props = defineProps<{ config: StartupConfig }>();
 initStore(props.config);
 
+// 暴露给父组件
 defineExpose({ collectValues: collectAll });
 </script>
