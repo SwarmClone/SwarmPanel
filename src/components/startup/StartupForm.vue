@@ -10,12 +10,11 @@
 
 <script setup lang="ts">
 import { initStore, collectAll } from '@/composables/useConfigStore';
-import type { StartupConfig } from '@/types/startup';
+import type { StartupConfig } from '@/types/startupConfig';
 import RoleSection from './RoleSection.vue';
 
 const props = defineProps<{ config: StartupConfig }>();
 initStore(props.config);
 
-const collectValues = () => collectAll();
-defineExpose({ collectValues });
+defineExpose({ collectValues: collectAll });
 </script>

@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { getVal, setVal } from '@/composables/useConfigStore';
-import type { ConfigItem } from '@/types/startup';
+import type { ConfigItem } from '@/types/startupConfig';
 
 const props = defineProps<{
   config: ConfigItem;

@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Role } from '@/types/startup';
+import type { Role } from '@/types/startupConfig';
 import ModuleSection from './ModuleSection.vue';
 defineProps<{ role: Role }>();
 </script>

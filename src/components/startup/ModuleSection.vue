@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Module } from '@/types/startup';
+import type { Module } from '@/types/startupConfig';
 import ConfigItem from './ConfigItem.vue';
 defineProps<{ module: Module; roleName: string }>();
 </script>

@@ -1,5 +1,5 @@
 import { reactive, watch } from 'vue';
-import type { ConfigItem, Module, Role, StartupConfig } from '@/types/startup';
+import type { ConfigItem, Module, Role, StartupConfig } from '@/types/startupConfig';
 
 const store = reactive<Record<string, any>>({});
 const key = (r: string, m: string, c: string) => `${r}.${m}.${c}`;

@@ -39,7 +39,8 @@ import axios from 'axios';
 import { notification } from 'ant-design-vue';
 import { LoadingOutlined } from '@ant-design/icons-vue';
 import StartupForm from '@/components/startup/StartupForm.vue';
-import type { StartupConfig } from '@/types/startup';
+import type { StartupConfig } from '@/types/startupConfig';
+import { initStore } from '@/composables/useConfigStore';
 
 const indicator = h(LoadingOutlined, { style: { fontSize: '50px', color: '#548AF7' }, spin: true });
 
@@ -57,11 +58,11 @@ onMounted(async () => {
   await getStartupInfo();
 
   fadeClass.value = 'fade-enter-active';
-  /* 强制 1.5 秒 loading*/
+  /* 强制 0.8 秒 loading*/
   setTimeout(async () => {
     fadeClass.value = 'fade-out';
     setTimeout(() => (showLoading.value = false), 300);
-  }, 1500);
+  }, 800);
 });
 
 async function getVersion() {
@@ -77,6 +78,7 @@ async function getVersion() {
 async function getStartupInfo() {
   try {
     const { data } = await axios.get(`http://${host}:${port}/api/startup_param`);
+    initStore(data);
     startupConfig.value = data;
   } catch {
     openNotification('error', '获取启动信息失败', '请等待后端服务正常启动后重试');
