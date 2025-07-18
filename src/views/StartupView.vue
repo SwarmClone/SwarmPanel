@@ -150,6 +150,7 @@ const openNotification = (
 .loading-mask {
   position: fixed;
   inset: 0;
+  background: #fff;
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -171,10 +172,12 @@ const openNotification = (
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 1.2rem;
 }
 
 .title-wrapper h1 {
   margin: 0;
+  font-weight: bold;
 }
 
 .title-wrapper p {
