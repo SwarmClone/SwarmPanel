@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, h } from 'vue';
+import { ref, onMounted, h } from 'vue';
 import axios from 'axios';
 import { notification } from 'ant-design-vue';
 import { LoadingOutlined } from '@ant-design/icons-vue';
@@ -47,7 +47,6 @@ import Sidebar from '@/components/startup/Sidebar.vue';
 import { collectSelected } from '@/composables/useSelectedModules';
 import { saveConfig, startService } from '@/api/configSaveApi';
 
-/* ---------- loading 图标 ---------- */
 const indicator = h(LoadingOutlined, {
   style: { fontSize: '50px', color: '#548AF7' },
   spin: true,
@@ -59,70 +58,40 @@ const fadeClass      = ref('');
 const startupConfig  = ref<StartupConfig>([]);
 const startupFormRef = ref<InstanceType<typeof StartupForm>>();
 
-/* ---------- 网络配置 ---------- */
 const host = '127.0.0.1';
 const port = '8000';
 
-let retryTimer: number | null = null;
-let closingLoading = false;
+onMounted(async () => {
+  await getVersion();
+  await getStartupInfo();
 
-onMounted(() => {
-  startPolling();
+  fadeClass.value = 'fade-enter-active';
+  setTimeout(() => {
+    fadeClass.value = 'fade-out';
+    setTimeout(() => (showLoading.value = false), 300);
+  }, 800);
 });
 
-onUnmounted(() => {
-  stopPolling();
-});
-
-/* ---------- 轮询逻辑 ---------- */
-async function startPolling() {
-  const poll = async () => {
-    try {
-      await Promise.all([getVersion(), getStartupInfo()]);
-      stopPolling();
-      closeLoading();
-    } catch {
-      /* 失败时静默等待下一次轮询 */
-      openNotification('warning', '连接失败', '无法连接到后端服务，正在重试中...\
-      请耐心等待后端服务启动')
-    }
-  };
-
-  await poll();                       // 立即执行一次
-  if (showLoading.value) {            // 若仍未成功
-    retryTimer = window.setInterval(poll, 5000);
-  }
-}
-
-function stopPolling() {
-  if (retryTimer !== null) {
-    clearInterval(retryTimer);
-    retryTimer = null;
-  }
-}
-
-function closeLoading() {
-  if (closingLoading) return;
-  closingLoading = true;
-  stopPolling();
-  fadeClass.value = 'fade-out';
-  setTimeout(() => (showLoading.value = false), 300);
-  openNotification('success', '连接成功', '已连接到后端服务。现在可以开始配置启动项了');
-}
-
-/* ---------- 获取版本与配置 ---------- */
 async function getVersion() {
-  const { data } = await axios.get(`http://${host}:${port}/api/get_version`);
-  version.value = data.version === 'error' ? '未知版本' : data.version;
+  try {
+    const { data } = await axios.get(`http://${host}:${port}/api/get_version`);
+    version.value = data.version === 'error' ? '未知版本' : data.version;
+  } catch {
+    openNotification('error', '获取版本号失败', '请等待后端服务正常启动后重试');
+    version.value = '获取失败';
+  }
 }
 
 async function getStartupInfo() {
-  const { data } = await axios.get(`http://${host}:${port}/api/startup_param`);
-  initStore(data);
-  startupConfig.value = data;
+  try {
+    const { data } = await axios.get(`http://${host}:${port}/api/startup_param`);
+    initStore(data);
+    startupConfig.value = data;
+  } catch {
+    openNotification('error', '获取启动信息失败', '请等待后端服务正常启动后重试');
+  }
 }
 
-/* ---------- 保存 / 启动 ---------- */
 async function handleSave() {
   const cfg = startupFormRef.value?.collectValues();
   const selected = collectSelected();
@@ -158,16 +127,18 @@ const openNotification = (
 
 <style scoped>
 /* 全局禁止整页滚动 */
-html, body { overflow: hidden; }
+html, body {
+  overflow: hidden;
+}
 
-/* 顶部导航 */
+/* 顶部导航：占满右侧、左对齐、留间距 */
 .header {
   position: fixed;
   top: 0;
-  left: 260px;
+  left: 260px;       /* 侧边栏宽度 */
   right: 0;
   height: 64px;
-  padding: 0 20px;
+  padding: 0 20px 0 20px;
   background: #fff;
   border-bottom: 1px solid #f0f0f0;
   z-index: 10;
@@ -180,20 +151,24 @@ html, body { overflow: hidden; }
   font-size: 1rem;
   font-weight: 200;
   margin: 0;
+  text-align: left;
   flex: 1;
 }
 
-.btn-group { display: flex; gap: 16px; }
+.btn-group {
+  display: flex;
+  gap: 16px;
+}
 
-/* 主体滚动区域 */
+/* 右侧主体滚动区域 */
 .main-scroll {
   height: 100vh;
   overflow-y: auto;
-  padding: 84px 20px 20px;
+  padding: 84px 20px 20px; /* header 高 64 + 20 留空 */
   background-color: #fff;
 }
 
-/* loading 遮罩 */
+/* loading 遮罩保持原样 */
 .loading-mask {
   position: fixed;
   inset: 0;
