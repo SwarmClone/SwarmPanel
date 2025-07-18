@@ -1,14 +1,11 @@
 <template>
-  <a-collapse>
-    <a-collapse-panel :header="module.module_name" :key="module.module_name">
+  <a-collapse
+    :active-key="activeKeys"
+    @change="handleChange"
+  >
+    <a-collapse-panel :header="module.module_name" :key="panelKey">
       <p style="margin-bottom: 12px;">{{ module.desc }}</p>
-
-      <!-- 蒙版容器 -->
-      <div
-        class="module-wrapper"
-        :class="{ masked: !enabled }"
-      >
-        <!-- 真正的配置项 -->
+      <div class="module-wrapper" :class="{ masked: !enabled }">
         <ConfigItem
           v-for="cfg in module.config"
           :key="cfg.name"
@@ -26,26 +23,43 @@
 <script setup lang="ts">
 import type { Module } from '@/types/startupConfig';
 import ConfigItem from './ConfigItem.vue';
-import { isModuleSelected } from '@/composables/useSelectedModules';
-import { computed } from 'vue';
+import { isModuleSelected, autoExpandPanels } from '@/composables/useSelectedModules';
+import { computed, ref, watchEffect } from 'vue';
 
 const props = defineProps<{ module: Module; roleName: string }>();
 
-const enabled = computed(() =>
-  isModuleSelected(props.roleName, props.module.module_name)
-);
+const panelKey = computed(() => `${props.roleName}.${props.module.module_name}`);
+const enabled  = computed(() => isModuleSelected(props.roleName, props.module.module_name));
+
+// 用户手动展开的 key
+const userExpanded = ref<string[]>([]);
+
+const activeKeys = computed(() => {
+  const keys = [...userExpanded.value];
+  if (enabled.value && autoExpandPanels.has(panelKey.value)) {
+    if (!keys.includes(panelKey.value)) keys.push(panelKey.value);
+  }
+  return keys;
+});
+
+const handleChange = (keys: string | string[]) => {
+  const arr = Array.isArray(keys) ? keys : [keys];
+  userExpanded.value = arr.filter(k => k === panelKey.value);
+};
+
+watchEffect(() => {
+  if (enabled.value) autoExpandPanels.add(panelKey.value);
+});
 </script>
 
 <style scoped>
 .module-wrapper {
   position: relative;
 }
-
 .masked {
   pointer-events: none;
   user-select: none;
 }
-
 .masked::before {
   content: '';
   position: absolute;

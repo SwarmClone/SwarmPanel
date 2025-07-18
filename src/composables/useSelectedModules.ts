@@ -1,30 +1,30 @@
 import { reactive } from 'vue';
 
-/**
- * 结构：{ [roleName: string]: Set<moduleName> }
- */
 export const selectedModules = reactive<Record<string, Set<string>>>({});
 
-/** 勾选 / 取消勾选 */
+export const autoExpandPanels = reactive<Set<string>>(new Set());
+
 export const toggleModule = (role: string, module: string) => {
   if (!selectedModules[role]) selectedModules[role] = new Set();
   const set = selectedModules[role];
-  set.has(module) ? set.delete(module) : set.add(module);
+  const key = `${role}.${module}`;
+
+  if (set.has(module)) {
+    set.delete(module);
+    // 取消勾选时不自动收起，由用户手动控制
+  } else {
+    set.add(module);
+    autoExpandPanels.add(key); // 勾选后追加
+  }
 };
 
-/** 已勾选模块列表 [{ role, module[] }] */
 export const collectSelected = () =>
   Object.entries(selectedModules)
-    .filter(([, set]) => set.size)
-    .map(([role, set]) => ({
-      role,
-      module: Array.from(set),
-    }));
+    .filter(([, s]) => s.size)
+    .map(([role, s]) => ({ role, module: Array.from(s) }));
 
-export const isModuleSelected = (
-  role: string,
-  module: string
-): boolean => selectedModules[role]?.has(module) ?? false;
+export const isModuleSelected = (role: string, module: string) =>
+  selectedModules[role]?.has(module) ?? false;
 
 export const collectFiltered = (
   fullCfg: Record<string, Record<string, any>>
