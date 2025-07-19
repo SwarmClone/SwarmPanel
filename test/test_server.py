@@ -1,5 +1,6 @@
 import json
 import os
+import random
 from pathlib import Path
 from fastapi import FastAPI
 import uvicorn
@@ -25,10 +26,12 @@ class Payload(BaseModel):
 
 @app.get("/api/get_version")
 async def get_version():
+    server_500()
     return {"version": "1.0.0"}
 
 @app.get("/api/startup_param")
 async def get_startup_parameters():
+    server_500()
     with CONFIG_PATH.open("r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -40,9 +43,15 @@ async def save_endpoint(data: Payload):
 
 @app.post("/start")
 async def start_endpoint(data: Payload):
+    server_500()
     print("[/start] 收到的 JSON:")
     print(json.dumps(data.model_dump(), ensure_ascii=False, indent=2))
     return {"status": "started"}
+
+def server_500():
+    if random.random() < 0.3:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail="Random server error")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
