@@ -37,11 +37,19 @@
     />
 
     <!-- 字符串 -->
-    <a-input
-      v-else-if="config.type === 'str'"
-      v-model:value="value"
-      :disabled="disabled"
-    />
+    <template v-else-if="config.type === 'str'">
+      <a-input-password
+        v-if="config.password"
+        v-model:value="value"
+        :disabled="disabled"
+        visibility-toggle
+      />
+      <a-input
+        v-else
+        v-model:value="value"
+        :disabled="disabled"
+      />
+    </template>
 
     <!-- 布尔 -->
     <a-switch

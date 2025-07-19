@@ -681,6 +681,7 @@
                         "name": "api_key",
                         "type": "str",
                         "desc": "api key",
+                        "password": true,
                         "required": true,
                         "default": "",
                         "options": [],

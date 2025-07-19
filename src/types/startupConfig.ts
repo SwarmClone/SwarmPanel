@@ -14,6 +14,7 @@ export interface ConfigItem {
   min?: number;
   max?: number;
   step?: number;
+  password?: boolean;
 }
 
 export interface Module {
