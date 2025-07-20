@@ -11,6 +11,7 @@ export interface ConfigItem {
   required: boolean;
   default?: any;
   options?: Option[];
+  multiline: boolean;
   min?: number;
   max?: number;
   step?: number;

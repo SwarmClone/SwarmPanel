@@ -38,17 +38,27 @@
 
     <!-- 字符串 -->
     <template v-else-if="config.type === 'str'">
-      <a-input-password
-        v-if="config.password"
+      <!-- 多行文本框 -->
+      <a-textarea
+        v-if="config.multiline"
         v-model:value="value"
         :disabled="disabled"
-        visibility-toggle
+        :rows="10"
       />
-      <a-input
-        v-else
-        v-model:value="value"
-        :disabled="disabled"
-      />
+      <!-- 单行文本框 -->
+      <template v-else>
+        <a-input-password
+          v-if="config.password"
+          v-model:value="value"
+          :disabled="disabled"
+          visibility-toggle
+        />
+        <a-input
+          v-else
+          v-model:value="value"
+          :disabled="disabled"
+        />
+      </template>
     </template>
 
     <!-- 布尔 -->
