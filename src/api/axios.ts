@@ -10,7 +10,7 @@ http.interceptors.response.use(
   response => response,
   error => {
     const backendMsg =
-      error?.response?.data?.detail ||   // FastAPI 默认字段
+      error?.response?.data?.detail ||
       error?.response?.data?.message ||
       error?.response?.statusText ||
       error?.message ||

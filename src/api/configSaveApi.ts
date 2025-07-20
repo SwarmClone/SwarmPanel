@@ -49,7 +49,23 @@ export async function saveConfig(cfg: any, selected: string[]) {
 
 export async function startService(cfg: any, selected: string[]) {
   try {
-    const { data } = await http.post('/start', { cfg, selected });
+    const { data } = await http.post('/api/start', { cfg, selected });
+    return data;
+  } catch (err: any) {
+    const status = err?.response?.status || 0;
+    const msg =
+      err?.response?.data?.detail ||
+      err?.response?.data?.message ||
+      err?.response?.statusText ||
+      '未知错误';
+    alertError(status, msg);
+    throw err;
+  }
+}
+
+export async function stopService(cfg: any, selected: string[]) {
+  try {
+    const { data } = await http.post('/api/stop', { cfg, selected });
     return data;
   } catch (err: any) {
     const status = err?.response?.status || 0;

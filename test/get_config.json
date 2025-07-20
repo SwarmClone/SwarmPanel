@@ -1,6 +1,7 @@
 [
     {
         "role_name": "LLM",
+        "allowed_num":1,
         "modules": [
             {
                 "module_name": "LLMBase",
@@ -719,6 +720,7 @@
     },
     {
         "role_name": "TTS",
+        "allowed_num": 1,
         "modules": [
             {
                 "module_name": "TTSCosyvoice",
@@ -785,6 +787,7 @@
     },
     {
         "role_name": "Frontend",
+        "allowed_num": 1,
         "modules": [
             {
                 "module_name": "FrontendDummy",
@@ -839,6 +842,7 @@
     },
     {
         "role_name": "ASR",
+        "allowed_num": 1,
         "modules": [
             {
                 "module_name": "ASRSherpa",
@@ -1014,6 +1018,7 @@
     },
     {
         "role_name": "Chat",
+        "allowed_num": 4,
         "modules": [
             {
                 "module_name": "BiliBiliChat",
@@ -1130,6 +1135,7 @@
     },
     {
         "role_name": "Plugin",
+        "allowed_num": 2,
         "modules": [
             {
                 "module_name": "ScheduledPlaylist",
