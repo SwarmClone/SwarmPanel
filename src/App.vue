@@ -1,18 +1,9 @@
 <script setup lang="ts">
+import { antdTheme } from '@/main';
 </script>
 
 <template>
-  <router-view></router-view>
+  <a-config-provider :theme="antdTheme">
+    <router-view/>
+  </a-config-provider>
 </template>
-
-<style>
-/* 引入字体 */
-@font-face {
-  font-family: 'MiSans-Demibold';
-  src: url('./assets/font/MiSans-Demibold.ttf') format('truetype');
-}
-
-* {
-  font-family: 'MiSans-Demibold', sans-serif;
-}
-</style>

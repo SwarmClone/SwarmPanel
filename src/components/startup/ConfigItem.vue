@@ -87,7 +87,7 @@
     <div
       v-if="config.desc"
       v-html="parsedDesc"
-      style="margin-top: 4px; font-size: 12px; color: #666;"
+      style="margin-top: 4px; font-size: 12px;"
     />
   </a-form-item>
 </template>

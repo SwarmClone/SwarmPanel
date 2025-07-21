@@ -1,0 +1,19 @@
+/* 引入字体 */
+@font-face {
+  font-family: 'MiSans-Demibold';
+  src: url('./assets/font/MiSans-Demibold.ttf') format('truetype');
+}
+
+* {
+  font-family: 'MiSans-Demibold', sans-serif;
+}
+
+/* 隐藏所有纵向滚动条 */
+::-webkit-scrollbar {
+  width: 0 !important;
+  background: transparent;
+}
+html, body, .main-scroll, .unified-sidebar {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}

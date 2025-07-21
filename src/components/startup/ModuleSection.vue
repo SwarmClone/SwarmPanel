@@ -73,7 +73,6 @@ watch(highlightedKey, (newKey) => {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.15);
   z-index: 1;
 }
 </style>
