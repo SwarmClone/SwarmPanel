@@ -33,13 +33,13 @@ export const shouldPanelBeOpen = (
 ): boolean => {
   const key = `${role}.${module}`;
 
-  // 用户手动折叠 → 强制关闭
+  // 用户手动折叠 -> 强制关闭
   if (manualCollapsed.has(key)) return false;
 
-  // 用户手动展开 → 强制打开
+  // 用户手动展开 -> 强制打开
   if (userExpanded.includes(key)) return true;
 
-  // 当前被勾选 → 自动打开（每次勾选都会触发）
+  // 当前被勾选 -> 自动打开（每次勾选都会触发）
   if (selectedModules[role]?.has(module)) return true;
 
   return false;
