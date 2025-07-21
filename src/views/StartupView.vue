@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <!-- 启动中蒙版（全屏） -->
+        <!-- 启动中蒙版 -->
         <transition name="fade">
           <div
             v-if="starting"
@@ -50,7 +50,7 @@
           </div>
         </transition>
 
-        <!-- 首次加载蒙版（全屏） -->
+        <!-- 首次加载蒙版 -->
         <transition name="fade">
           <div
             v-if="showLoading"

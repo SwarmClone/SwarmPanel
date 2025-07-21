@@ -17,3 +17,9 @@ html, body, .main-scroll, .unified-sidebar {
   -ms-overflow-style: none;  /* IE/Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+/* 组件限宽 */
+.width-limit {
+    max-width: 800px !important;
+    width: 100%
+}

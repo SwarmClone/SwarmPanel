@@ -12,6 +12,7 @@
         :max="config.max"
         :step="computedStep"
         :disabled="disabled"
+        class="width-limit"
       />
       <a-input-number
         v-model:value="value"
@@ -20,7 +21,8 @@
         :step="computedStep"
         :precision="precision"
         :disabled="disabled"
-        style="width: 100%; margin-top: 8px;"
+        style="margin-top: 8px;"
+        class="width-limit"
       />
     </template>
 
@@ -34,6 +36,7 @@
       :precision="precision"
       :disabled="disabled"
       style="width: 100%;"
+      class="width-limit"
     />
 
     <!-- 字符串 -->
@@ -44,6 +47,7 @@
         v-model:value="value"
         :disabled="disabled"
         :rows="10"
+        class="width-limit"
       />
       <!-- 单行文本框 -->
       <template v-else>
@@ -52,11 +56,13 @@
           v-model:value="value"
           :disabled="disabled"
           visibility-toggle
+          class="width-limit"
         />
         <a-input
           v-else
           v-model:value="value"
           :disabled="disabled"
+          class="width-limit"
         />
       </template>
     </template>
@@ -73,6 +79,7 @@
       v-else-if="config.type === 'selection'"
       v-model:value="value"
       :disabled="disabled"
+      class="width-limit"
     >
       <a-select-option
         v-for="opt in config.options"
@@ -88,6 +95,7 @@
       v-if="config.desc"
       v-html="parsedDesc"
       style="margin-top: 4px; font-size: 12px;"
+      class="width-limit"
     />
   </a-form-item>
 </template>
