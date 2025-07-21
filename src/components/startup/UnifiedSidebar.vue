@@ -72,7 +72,6 @@
 import { ref, computed, watch } from 'vue';
 import type { StartupConfig } from '@/types/startupConfig';
 import { toggleModule, isModuleSelected } from '@/composables/useSelectedModules';
-import { antdTheme } from '@/main';
 
 interface ModuleStatus {
   role_name: string;

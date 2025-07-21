@@ -11,7 +11,7 @@ export const isDark = ref(localStorage.getItem('antd-theme') === 'dark');
 export const antdTheme = ref({
   algorithm: isDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm,
 });
-
+console.log(antdTheme);
 
 /* FontAwesome 相关 */
 import { library } from '@fortawesome/fontawesome-svg-core';
