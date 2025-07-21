@@ -3,6 +3,7 @@
     :label="labelWithRange"
     :required="config.required"
     :rules="config.required ? [{ required: true, message: `${config.name} 必填` }] : []"
+    class="desc"
   >
     <!-- 滑动条 + 输入框 -->
     <template v-if="config.min != null && config.max != null">
@@ -94,8 +95,8 @@
     <div
       v-if="config.desc"
       v-html="parsedDesc"
-      style="margin-top: 4px; font-size: 12px;"
-      class="width-limit"
+      style="margin-top: 4px;"
+      class="width-limit desc"
     />
   </a-form-item>
 </template>
@@ -135,3 +136,10 @@ const parsedDesc = computed(() =>
   )
 );
 </script>
+
+<style scoped>
+.desc {
+  font-size: 1rem;
+  font-weight: 200;
+}
+</style>

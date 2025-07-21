@@ -109,7 +109,6 @@ const starting = ref(false)
 
 const { exec: loadVersion } = useRetryRequest(fetchVersion)
 const { exec: loadStartup } = useRetryRequest(fetchStartupParam)
-const { exec: execSave } = useRetryRequest(saveConfig)
 const { exec: execStart } = useRetryRequest(startService)
 
 onMounted(async () => {
@@ -135,15 +134,45 @@ onMounted(async () => {
 })
 
 async function handleSave() {
-  const cfg = startupFormRef.value?.collectValues()
-  const selected = collectSelected().flatMap(i => i.module)
-  await execSave(cfg, selected)
-  notification.success({ message: '保存成功', description: '配置已暂存', placement: 'bottomRight' })
+  const cfg = startupFormRef.value?.collectValues();
+  const selected = collectSelected().flatMap(i => i.module);
+
+  const dataToSave = {
+    value: cfg,
+    selectedModules: selected,
+  };
+
+  const jsonString = JSON.stringify(dataToSave, null, 2);
+  const blob = new Blob([jsonString], { type: 'application/json' });
+
+  // 创建下载链接
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+
+  // 文件名：config_年月日时分秒毫秒.json
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+  const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+  a.download = `config_${timestamp}.json`;
+
+  a.click();
+  a.remove();
+
+  notification.success({ message: '保存成功', description: '配置已暂存', placement: 'bottomRight' });
 }
 
 async function handleStart() {
   const cfg = startupFormRef.value?.collectValues()
   const selected = collectSelected().flatMap(i => i.module)
+  console.log(cfg);
+  console.log(selected);
 
   starting.value = true
   try {
