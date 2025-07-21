@@ -31,22 +31,6 @@ function alertError(status: number, msg: string) {
   });
 }
 
-export async function saveConfig(cfg: any, selected: string[]) {
-  try {
-    const { data } = await http.post('/save', { cfg, selected });
-    return data;
-  } catch (err: any) {
-    const status = err?.response?.status || 0;
-    const msg =
-      err?.response?.data?.detail ||
-      err?.response?.data?.message ||
-      err?.response?.statusText ||
-      '未知错误';
-    alertError(status, msg);
-    throw err;
-  }
-}
-
 export async function startService(cfg: any, selected: string[]) {
   try {
     const { data } = await http.post('/api/start', { cfg, selected });
