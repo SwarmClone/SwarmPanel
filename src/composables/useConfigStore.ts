@@ -37,5 +37,5 @@ export const collectAll = () => collectFiltered(collectAllRaw());
 
 // TODO：这个我觉得可能会需要
 watch(store, (value) => {
-  console.log(value)
+  console.log(value);
 });

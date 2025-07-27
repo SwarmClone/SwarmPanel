@@ -9,23 +9,25 @@
       />
 
       <a-layout-content class="main-scroll">
-        <div class="header"
-          :style="{ backgroundColor: token.colorBgContainer }">
-          <p class="page-title">
-            {{ isRunning ? '系统消息总览' : '启动前参数配置' }}
-          </p>
+        <div class="header" :style="{ backgroundColor: token.colorBgContainer }">
+          <!-- 左侧 -->
+          <div class="header-left">
+            <p class="page-title">
+              {{ isRunning ? '系统消息总览' : '启动前参数配置' }}
+            </p>
 
-          <!-- 主题切换 -->
+            <div class="btn-group">
+              <a-button size="large" @click="openPreset">预设</a-button>
+              <a-button type="primary" size="large" @click="handleStart">启动</a-button>
+            </div>
+          </div>
+
+          <!-- 右侧 -->
           <a-tooltip placement="bottom" title="切换主题">
             <a-button type="text" size="large" @click="toggleAntdTheme">
               <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
             </a-button>
           </a-tooltip>
-
-          <div class="btn-group">
-            <a-button size="large" @click="handleSave">保存</a-button>
-            <a-button type="primary" size="large" @click="handleStart">启动</a-button>
-          </div>
         </div>
 
         <!-- 启动中蒙版 -->
@@ -74,6 +76,11 @@
 
         <StartupForm v-if="!isRunning" ref="startupFormRef" :config="startupConfig" />
       </a-layout-content>
+      <PresetDrawer 
+        :open="presetVisible" 
+        @close="presetVisible = false" 
+        :full-config="startupConfig"
+      />
     </a-layout>
   </a-config-provider>
 </template>
@@ -81,7 +88,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, h } from 'vue'
 import axios from 'axios'
-import { notification, theme } from 'ant-design-vue'
+import { theme } from 'ant-design-vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
 import StartupForm from '@/components/startup/StartupForm.vue'
 import type { StartupConfig } from '@/types/startupConfig'
@@ -92,6 +99,7 @@ import { useRetryRequest } from '@/composables/useRetryRequest'
 import { fetchVersion, fetchStartupParam } from '@/api/health'
 import UnifiedSidebar from '@/components/startup/UnifiedSidebar.vue'
 import { isDark, antdTheme } from '@/main'
+import PresetDrawer from '@/components/startup/PresetDrawer.vue'
 
 const indicator = h(LoadingOutlined, { style: { fontSize: '50px', color: '#548AF7' }, spin: true })
 
@@ -106,7 +114,9 @@ const startupFormRef = ref<InstanceType<typeof StartupForm>>()
 const runningStatus = ref<any[]>([])
 const isRunning = ref(false)
 const starting = ref(false)
+const presetVisible = ref(false)
 
+const openPreset = () => (presetVisible.value = true)
 const { exec: loadVersion } = useRetryRequest(fetchVersion)
 const { exec: loadStartup } = useRetryRequest(fetchStartupParam)
 const { exec: execStart } = useRetryRequest(startService)
@@ -132,41 +142,6 @@ onMounted(async () => {
     setTimeout(() => (showLoading.value = false), 300)
   }, 800)
 })
-
-async function handleSave() {
-  const cfg = startupFormRef.value?.collectValues();
-  const selected = collectSelected().flatMap(i => i.module);
-
-  const dataToSave = {
-    value: cfg,
-    selectedModules: selected,
-  };
-
-  const jsonString = JSON.stringify(dataToSave, null, 2);
-  const blob = new Blob([jsonString], { type: 'application/json' });
-
-  // 创建下载链接
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-
-  // 文件名：config_年月日时分秒毫秒.json
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-  const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
-  a.download = `config_${timestamp}.json`;
-
-  a.click();
-  a.remove();
-
-  notification.success({ message: '保存成功', description: '配置已暂存', placement: 'bottomRight' });
-}
 
 async function handleStart() {
   const cfg = startupFormRef.value?.collectValues()
@@ -231,6 +206,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 .page-title {
   font-size: 1rem;
