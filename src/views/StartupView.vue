@@ -3,8 +3,8 @@
     <a-layout style="min-height: 100vh">
       <UnifiedSidebar
         :config="startupConfig"
-        :status="runningStatus"
-        :is-running="isRunning"
+        :status="[]"
+        :is-running="false"
         :style="{ backgroundColor: token.colorBgContainer }"
       />
 
@@ -12,9 +12,7 @@
         <div class="header" :style="{ backgroundColor: token.colorBgContainer }">
           <!-- 左侧 -->
           <div class="header-left">
-            <p class="page-title">
-              {{ isRunning ? '系统消息总览' : '启动前参数配置' }}
-            </p>
+            <p class="page-title">启动前参数配置</p>
 
             <div class="btn-group">
               <a-button size="large" @click="openPreset">预设</a-button>
@@ -22,7 +20,7 @@
             </div>
           </div>
 
-          <!-- 右侧 -->
+          <!-- 右侧主题切换 -->
           <a-tooltip placement="bottom" title="切换主题">
             <a-button type="text" size="large" @click="toggleAntdTheme">
               <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
@@ -74,11 +72,12 @@
           </div>
         </transition>
 
-        <StartupForm v-if="!isRunning" ref="startupFormRef" :config="startupConfig" />
+        <StartupForm ref="startupFormRef" :config="startupConfig" />
       </a-layout-content>
-      <PresetDrawer 
-        :open="presetVisible" 
-        @close="presetVisible = false" 
+
+      <PresetDrawer
+        :open="presetVisible"
+        @close="presetVisible = false"
         :full-config="startupConfig"
       />
     </a-layout>
@@ -86,8 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, h } from 'vue'
-import axios from 'axios'
+import { ref, onMounted, h } from 'vue'
 import { theme } from 'ant-design-vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
 import StartupForm from '@/components/startup/StartupForm.vue'
@@ -101,29 +99,30 @@ import UnifiedSidebar from '@/components/startup/UnifiedSidebar.vue'
 import { isDark, antdTheme } from '@/main'
 import PresetDrawer from '@/components/startup/PresetDrawer.vue'
 
-const indicator = h(LoadingOutlined, { style: { fontSize: '50px', color: '#548AF7' }, spin: true })
-
-/* token：实时暗黑/亮色背景色 */
+const indicator = h(LoadingOutlined, {
+  style: { fontSize: '50px', color: '#548AF7' },
+  spin: true
+})
 const { token } = theme.useToken()
 
 const version = ref('获取中...')
 const showLoading = ref(true)
-const fadeClass = ref('')
 const startupConfig = ref<StartupConfig>([])
 const startupFormRef = ref<InstanceType<typeof StartupForm>>()
-const runningStatus = ref<any[]>([])
-const isRunning = ref(false)
 const starting = ref(false)
 const presetVisible = ref(false)
 
 const openPreset = () => (presetVisible.value = true)
+
 const { exec: loadVersion } = useRetryRequest(fetchVersion)
 const { exec: loadStartup } = useRetryRequest(fetchStartupParam)
 const { exec: execStart } = useRetryRequest(startService)
 
 onMounted(async () => {
   try {
-    version.value = await loadVersion().then(d => (d.version === 'error' ? '未知版本' : d.version))
+    version.value = await loadVersion().then(d =>
+      d.version === 'error' ? '未知版本' : d.version
+    )
   } catch {
     version.value = '获取失败'
   }
@@ -136,50 +135,28 @@ onMounted(async () => {
     /* 已弹窗，不再提示 */
   }
 
-  fadeClass.value = 'fade-enter-active'
   setTimeout(() => {
-    fadeClass.value = 'fade-out'
-    setTimeout(() => (showLoading.value = false), 300)
+    showLoading.value = false
   }, 800)
 })
 
 async function handleStart() {
   const cfg = startupFormRef.value?.collectValues()
   const selected = collectSelected().flatMap(i => i.module)
-  console.log(cfg);
-  console.log(selected);
 
   starting.value = true
   try {
     const res = await execStart(cfg, selected)
     if (res.status === 'started') {
-      isRunning.value = true
-      startPolling(selected)
+      // 将选中模块列表缓存
+      localStorage.setItem('selectedModules', JSON.stringify(selected))
+      // 跳转
+      window.location.replace('/running')
     }
   } finally {
     starting.value = false
   }
 }
-
-let timer: number | null = null
-function startPolling(selectedModules: string[]) {
-  const fetch = async () => {
-    try {
-      const joined = selectedModules.join(',')
-      const url = `http://localhost:8000/api/get_status?selected=${encodeURIComponent(joined)}`
-      const res = await axios.get(url)
-      runningStatus.value = Array.isArray(res.data) ? res.data : []
-    } catch {
-      runningStatus.value = []
-    }
-  }
-  fetch()
-  timer = window.setInterval(fetch, 500)
-}
-
-onUnmounted(() => {
-  if (timer) clearInterval(timer)
-})
 
 const toggleAntdTheme = () => {
   isDark.value = !isDark.value
@@ -207,7 +184,6 @@ body {
   align-items: center;
   justify-content: space-between;
 }
-
 .header-left {
   display: flex;
   align-items: center;
@@ -266,8 +242,12 @@ body {
   justify-content: center;
 }
 @keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 .theme-btn {
   margin-right: 16px;

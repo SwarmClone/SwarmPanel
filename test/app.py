@@ -4,7 +4,7 @@ import random
 from datetime import datetime
 from pathlib import Path
 from typing import Any, List, Dict
-
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -25,6 +25,17 @@ app.add_middleware(
 _status_store: Dict[str, Dict[str, Any]] = {}
 _all_modules: set[str] = set()
 _lifecycle_task: asyncio.Task | None = None 
+
+class Msg(BaseModel):
+    message_name: str
+    send_time: int
+    message_type: str
+    message_source: str
+    message_destinations: List[str]
+    message: List[Dict[str, str]]
+    getters: List[Dict[str, int]]
+
+messages_buffer: List[Msg] = []
 
 class Payload(BaseModel):
     cfg: Any = Field(..., description="前端表单配置")
@@ -72,9 +83,9 @@ async def get_status(selected: str):
     """
     统一时间线：
     0s   : 所有模块 loading
-    15s  : 所有模块 ready
-    17s  : 所有模块 running
-    19s  : 随机 1-2 个模块 error，其余 running
+    5s  : 所有模块 ready
+    10s  : 所有模块 running
+    12s  : 随机 1-2 个模块 error，其余 running
     之后保持不变
     """
     global _lifecycle_task
@@ -93,17 +104,17 @@ async def get_status(selected: str):
     ]
 
 async def _lifecycle() -> None:
-    # 15 秒后全部 ready
-    await asyncio.sleep(15)
+    # 5 秒全部 ready
+    await asyncio.sleep(5)
     for n in _all_modules:
         _status_store[n]["loaded"] = True
 
-    # 17 秒后全部 running
-    await asyncio.sleep(2)
+    # 10 秒全部 running
+    await asyncio.sleep(5)
     for n in _all_modules:
         _status_store[n]["running"] = True
 
-    # 19 秒后随机 1-2 个 error
+    # 12 秒随机 1-2 个 error
     await asyncio.sleep(2)
     error_count = min(random.randint(1, 2), len(_all_modules))
     error_names = random.sample(list(_all_modules), error_count)
@@ -113,6 +124,25 @@ async def _lifecycle() -> None:
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/api/get_messages")
+async def get_messages():
+    count = random.randint(1, 3)
+    for _ in range(count):
+        msg = Msg(
+            message_name=f"Msg{random.randint(1000, 9999)}",
+            send_time=int(datetime.now().timestamp()),
+            message_type=random.choice(["DATA", "SIGNAL"]),
+            message_source=random.choice(["LLM.LLMBase", "TTS.TTSCosyVoice", "ASR.FastWhisper"]),
+            message_destinations=random.sample(["TTS.TTSCosyVoice", "ASR.FastWhisper"], k=1),
+            message=[{"key": "text", "value": ''.join(random.choices('abcdefghijklmnopqrstuvwxyz0123456789', k=random.randint(5, 500)))}],
+            getters=[{"name": "TTS", "time": int(datetime.now().timestamp())}]
+        )
+        messages_buffer.append(msg)
+    res = [m.dict() for m in messages_buffer]
+    messages_buffer.clear()
+    return res
 
 if __name__ == "__main__":
     uvicorn.run(

@@ -1,17 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import StartupView from '../views/StartupView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import StartupView from '@/views/StartupView.vue'
+import RunningView from '@/views/RunningView.vue'
 
-const routes = [
-  {
-    path: '/',
-    name: 'StartupSettings',
-    component: StartupView
-  }
-];
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-});
-
-export default router;
+export default createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    { path: '/', name: 'startup', component: StartupView },
+    { path: '/running', name: 'running', component: RunningView }
+  ]
+})
