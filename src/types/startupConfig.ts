@@ -27,6 +27,7 @@ export interface Module {
 export interface Role {
   role_name: string;
   modules: Module[];
+  allowed_num: number;
 }
 
 export type StartupConfig = Role[];
