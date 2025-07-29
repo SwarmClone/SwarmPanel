@@ -19,7 +19,7 @@ app = FastAPI(title="SwarmPanel Backend(Test)", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 生产环境应指定具体域名
+    allow_origins=["*"],  # 注意：生产环境应指定具体域名！
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -98,6 +98,10 @@ async def _lifecycle() -> None:
 async def health():
     return {"status": "ok"}
 
+class Getter(BaseModel):
+    name: str
+    time: int
+
 class Msg(BaseModel):
     message_name: str
     send_time: int
@@ -105,7 +109,7 @@ class Msg(BaseModel):
     message_source: str
     message_destinations: List[str]
     message: List[Dict[str, str]]
-    getters: List[Dict[str, int]]
+    getters: List[Getter]
 
 messages_buffer: List[Msg] = []
 
@@ -120,7 +124,7 @@ async def get_messages():
             message_source=random.choice(["LLM.LLMBase", "TTS.TTSCosyVoice", "ASR.FastWhisper"]),
             message_destinations=random.sample(["TTS.TTSCosyVoice", "ASR.FastWhisper"], k=1),
             message=[{"key": "text", "value": ''.join(random.choices('abcdefghijklmnopqrstuvwxyz0123456789', k=random.randint(5, 500)))}],
-            getters=[{"name": "TTS", "time": int(datetime.now().timestamp())}]
+            getters=[Getter(name="TTS", time=int(datetime.now().timestamp()))]
         )
         messages_buffer.append(msg)
     res = [m.dict() for m in messages_buffer]
