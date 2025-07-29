@@ -14,21 +14,6 @@ import uvicorn
 
 BASE_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = BASE_DIR / "get_config.json"
-    
-messages_buffer: List[Msg] = []
-_status_store: Dict[str, Dict[str, Any]] = {}
-_all_modules: set[str] = set()
-_lifecycle_task: asyncio.Task | None = None
-
-app = FastAPI(title="SwarmPanel Backend(Test)", version="1.0.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # 注意：生产环境应指定具体域名！
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 class Getter(BaseModel):
     name: str
@@ -42,10 +27,27 @@ class Msg(BaseModel):
     message_destinations: List[str]
     message: List[Dict[str, str]]
     getters: List[Getter]
-    
+
 class Payload(BaseModel):
     cfg: Any = Field(..., description="前端表单配置")
     selected: List[str] = Field(..., description="勾选的模块")
+    
+messages_buffer: List[Msg] = []
+_status_store: Dict[str, Dict[str, Any]] = {}
+_all_modules: set[str] = set()
+_lifecycle_task: asyncio.Task | None = None
+
+app = FastAPI(title="SwarmPanel Backend(Test)", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 注意：生产环境应指定具体域名！
+    allow_credentials=True, # 让跨域请求支持 cookies
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 # 静态文件服务
 app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
