@@ -14,6 +14,11 @@ import uvicorn
 
 BASE_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = BASE_DIR / "get_config.json"
+    
+messages_buffer: List[Msg] = []
+_status_store: Dict[str, Dict[str, Any]] = {}
+_all_modules: set[str] = set()
+_lifecycle_task: asyncio.Task | None = None
 
 app = FastAPI(title="SwarmPanel Backend(Test)", version="1.0.0")
 
@@ -24,6 +29,26 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class Getter(BaseModel):
+    name: str
+    time: int
+
+class Msg(BaseModel):
+    message_name: str
+    send_time: int
+    message_type: str
+    message_source: str
+    message_destinations: List[str]
+    message: List[Dict[str, str]]
+    getters: List[Getter]
+    
+class Payload(BaseModel):
+    cfg: Any = Field(..., description="前端表单配置")
+    selected: List[str] = Field(..., description="勾选的模块")
+
+# 静态文件服务
+app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
 
 def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
@@ -41,10 +66,6 @@ async def get_startup_parameters():
         log(f"未找到配置文件: {CONFIG_PATH}")
         raise HTTPException(status_code=404, detail="配置文件缺失")
 
-class Payload(BaseModel):
-    cfg: Any = Field(..., description="前端表单配置")
-    selected: List[str] = Field(..., description="勾选的模块")
-
 @app.post("/save")
 async def save_endpoint(data: Payload):
     log("[/save] 收到的 JSON:")
@@ -57,10 +78,6 @@ async def start_endpoint(data: Payload):
     log(json.dumps(data.model_dump(), ensure_ascii=False, indent=2))
     await asyncio.sleep(2)
     return {"status": "started"}
-
-_status_store: Dict[str, Dict[str, Any]] = {}
-_all_modules: set[str] = set()
-_lifecycle_task: asyncio.Task | None = None
 
 @app.get("/api/get_status")
 async def get_status(selected: str):
@@ -98,21 +115,6 @@ async def _lifecycle() -> None:
 async def health():
     return {"status": "ok"}
 
-class Getter(BaseModel):
-    name: str
-    time: int
-
-class Msg(BaseModel):
-    message_name: str
-    send_time: int
-    message_type: str
-    message_source: str
-    message_destinations: List[str]
-    message: List[Dict[str, str]]
-    getters: List[Getter]
-
-messages_buffer: List[Msg] = []
-
 @app.get("/api/get_messages")
 async def get_messages():
     count = random.randint(1, 3)
@@ -130,9 +132,6 @@ async def get_messages():
     res = [m.dict() for m in messages_buffer]
     messages_buffer.clear()
     return res
-
-# 静态文件服务
-app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
 
 # SPA路由
 @app.get("/{path:path}")
