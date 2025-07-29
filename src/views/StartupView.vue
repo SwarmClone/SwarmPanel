@@ -151,7 +151,7 @@ async function handleStart() {
       // 将选中模块列表缓存
       localStorage.setItem('selectedModules', JSON.stringify(selected))
       // 跳转
-      window.location.replace('/running')
+      window.open('/running', '_blank')
     }
   } finally {
     starting.value = false
