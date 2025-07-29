@@ -47,8 +47,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
 # 静态文件服务
 app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
 
@@ -113,9 +111,13 @@ async def _lifecycle() -> None:
     for n in error_names:
         _status_store[n]["err"] = "模拟错误信息"
 
-@app.get("/health")
+@app.get("/api/health")
 async def health():
     return {"status": "ok"}
+
+@app.get("/api/get_global_status")
+async def get_global_status():
+    return {"status": "1"}
 
 @app.get("/api/get_messages")
 async def get_messages():
@@ -139,7 +141,7 @@ async def get_messages():
 @app.get("/{path:path}")
 async def serve_spa(request: Request, path: str):
     # 排除API路由和静态资源
-    if path.startswith("api/") or path.startswith("health") or path.startswith("assets/"):
+    if path.startswith("api/") or path.startswith("assets/"):
         raise HTTPException(status_code=404)
     
     # 返回index.html让Vue Router处理

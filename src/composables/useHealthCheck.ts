@@ -9,7 +9,7 @@ export function useHealthCheck() {
   const checkHealth = async () => {
     isCheckingHealth.value = true
     try {
-      const response = await axios.get('/health', {
+      const response = await axios.get('/api/health', {
         timeout: 3000,
         baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8000'
       })
