@@ -39,6 +39,7 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { message as antdMessage } from 'ant-design-vue'
 import { SendOutlined } from '@ant-design/icons-vue'
 import http from '@/api/axios'
+import { isDark } from '@/main'
 
 interface ChatMessage {
   id: string
@@ -105,6 +106,7 @@ const handleSend = async () => {
   } finally {
     loading.value = false
     scrollToBottom()
+    nextTick(() => focusInput())
   }
 }
 
@@ -167,6 +169,7 @@ onMounted(() => {
   fetchMessages()
   msgTimer = window.setInterval(fetchMessages, 1000)
   scrollToBottom()
+  nextTick(() => focusInput())
 })
 
 onUnmounted(() => {
@@ -179,7 +182,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 64px);
-  background-color: var(--td-bg-color-container)
+  background-color: v-bind(isDark ? '#121212' : '#FFFFFF')
 }
 .chat-box {
   flex: 1;
