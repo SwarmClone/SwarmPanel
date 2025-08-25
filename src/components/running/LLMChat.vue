@@ -41,6 +41,8 @@ import { SendOutlined } from '@ant-design/icons-vue'
 import http from '@/api/axios'
 import { isDark } from '@/main'
 
+console.log('isDark', isDark.value)
+
 interface ChatMessage {
   id: string
   role: 'user' | 'llm'
