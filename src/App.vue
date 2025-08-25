@@ -24,15 +24,33 @@
 </template>
 
 <script setup lang="ts">
-import { antdTheme } from '@/main';
+import { antdTheme, isDark } from '@/main';
 import { useHealthCheck } from '@/composables/useHealthCheck';
-import { h, onMounted } from 'vue';
+import { h, onMounted, watch } from 'vue';
 import { LoadingOutlined } from '@ant-design/icons-vue'
 
 const { isBackendHealthy, startHealthPolling } = useHealthCheck();
 
+/**
+ * 设置TDesign的主题模式
+ */
+const setTDesignTheme = () => {
+  if (isDark.value) {
+    document.documentElement.setAttribute('theme-mode', 'dark');
+  } else {
+    document.documentElement.removeAttribute('theme-mode');
+  }
+}
+
 onMounted(() => {
   startHealthPolling(2000);
+  // 初始化设置TDesign主题
+  setTDesignTheme();
+});
+
+// 监听主题变化，同步更新TDesign主题
+watch(isDark, () => {
+  setTDesignTheme();
 });
 
 const indicator = h(LoadingOutlined, {

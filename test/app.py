@@ -119,6 +119,11 @@ async def health():
 async def get_global_status():
     return {"status": "1"}
 
+@app.post("/api")
+async def api():
+    return {'result': 'sended'}
+
+
 @app.get("/api/get_messages")
 async def get_messages():
     count = random.randint(1, 3)

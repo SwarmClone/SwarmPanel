@@ -1,61 +1,30 @@
 <template>
   <a-config-provider :theme="antdTheme">
     <a-layout style="min-height: 100vh">
+      
+      <FilterSidebar />
+      <a-layout>
+            <a-layout-content class="main-scroll">
+              <div class="header" :style="{ backgroundColor: token.colorBgContainer }">
+                <div class="header-left">
+                  <p class="page-title">给LLM发送消息</p>
+                </div>
+                <a-tooltip placement="bottom" title="切换主题">
+                  <a-button type="text" size="large" @click="toggleAntdTheme">
+                    <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
+                  </a-button>
+                </a-tooltip>
+              </div>
+              <LLMChat/>
+            </a-layout-content>
+      </a-layout>
       <UnifiedSidebar
         :config="startupConfig"
         :status="runningStatus"
         :is-running="true"
         :style="{ backgroundColor: token.colorBgContainer }"
       />
-      <a-layout>
-        <a-layout-content class="main-scroll">
-          <div class="header" :style="{ backgroundColor: token.colorBgContainer }">
-            <div class="header-left">
-              <p class="page-title">系统消息总览</p>
-            </div>
-            <a-tooltip placement="bottom" title="切换主题">
-              <a-button type="text" size="large" @click="toggleAntdTheme">
-                <font-awesome-icon :icon="isDark ? ['fas', 'sun'] : ['fas', 'moon']" />
-              </a-button>
-            </a-tooltip>
-          </div>
-
-          <!-- 聊天区域 -->
-          <div class="chat-area">
-            <div class="chat-box">
-              <div
-                v-for="msg in messages"
-                :key="msg.send_time"
-                :class="['msg-block', msg.message_type.toLowerCase()]"
-              >
-                <div class="msg-title">
-                  【{{ msg.message_type }}】{{ msg.message_source }} → {{ msg.message_destinations.join(', ') }}
-                </div>
-                <div class="msg-content">
-                  <div v-for="kv in msg.message" :key="kv.key">{{ kv.key }}: {{ kv.value }}</div>
-                </div>
-                <div class="msg-time">{{ formatDate2(msg.send_time) }}</div>
-              </div>
-            </div>
-
-            <!-- 固定在底部的输入框 -->
-            <div class="chat-input">
-              <a-input
-                v-model:value="inputText"
-                placeholder="输入内容…"
-                @pressEnter="send"
-              >
-                <template #suffix>
-                  <a-button type="text" size="small" @click="send">
-                    <font-awesome-icon :icon="['fas', 'paper-plane']" />
-                  </a-button>
-                </template>
-              </a-input>
-            </div>
-          </div>
-        </a-layout-content>
-        <FilterSidebar />
-      </a-layout>
+          
     </a-layout>
   </a-config-provider>
 </template>
@@ -65,6 +34,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { theme } from 'ant-design-vue'
 import UnifiedSidebar from '@/components/startup/UnifiedSidebar.vue'
 import FilterSidebar from '@/components/running/FilterSidebar.vue'
+import LLMChat from '@/components/running/LLMChat.vue'
 import { isDark, antdTheme } from '@/main'
 import { fetchStartupParam } from '@/api/health'
 import { useRetryRequest } from '@/composables/useRetryRequest'
@@ -138,19 +108,6 @@ function startMessages() {
   msgTimer = window.setInterval(fetch, 1000)
 }
 
-const send = () => {
-  if (!inputText.value.trim()) return
-  messages.value.unshift({
-    message_name: 'User',
-    send_time: Math.floor(Date.now() / 1000),
-    message_type: 'USER',
-    message_source: 'Frontend',
-    message_destinations: ['Backend'],
-    message: [{ key: 'text', value: inputText.value }]
-  })
-  inputText.value = ''
-}
-
 onUnmounted(() => {
   if (timer) clearInterval(timer)
   if (msgTimer) clearInterval(msgTimer)
@@ -195,29 +152,5 @@ const toggleAntdTheme = () => {
   display: flex;
   flex-direction: column-reverse;
   padding: 0 8px;
-}
-.msg-block {
-  margin: 0;
-  padding: 8px;
-  line-height: 1.4;
-  word-break: break-all;
-  border-radius: 0;
-}
-.msg-block.data   { background: #52c41a; color: #fff; }
-.msg-block.signal { background: #1890ff; color: #fff; }
-.msg-title   { font-weight: 600; margin-bottom: 4px; }
-.msg-content { margin-bottom: 6px; }
-.msg-time    { font-size: 12px; opacity: 0.8; }
-.chat-input {
-  position: fixed;
-  bottom: 0;
-  left: 260px;
-  right: 260px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  border-top: 1px solid var(--color-border);
-  background: var(--color-bg-container);
 }
 </style>
