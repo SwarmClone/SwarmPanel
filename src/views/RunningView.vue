@@ -55,17 +55,12 @@ const { token } = theme.useToken()
 const startupConfig = ref([])
 const runningStatus = ref<ModuleStatus[]>([])
 const messages = ref<any[]>([])
-const inputText = ref('')
 
 const selectedModules = JSON.parse(localStorage.getItem('selectedModules') || '[]')
 
 const { exec: loadStartup } = useRetryRequest(fetchStartupParam)
 
-const formatDate2 = (ts: number) => {
-  const d = new Date(ts * 1000)
-  const pad = (n: number) => n.toString().padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-}
+
 
 onMounted(async () => {
   const data = await loadStartup()

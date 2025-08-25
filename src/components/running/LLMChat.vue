@@ -35,11 +35,10 @@
 
 <script setup lang="ts">
 
-import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { message as antdMessage } from 'ant-design-vue'
 import { SendOutlined } from '@ant-design/icons-vue'
 import http from '@/api/axios'
-import { isDark } from '@/main'
 
 interface ChatMessage {
   id: string
@@ -51,7 +50,7 @@ interface ChatMessage {
 const chatMessages = ref<ChatMessage[]>([])
 const inputText = ref('')
 const loading = ref(false)
-const chatSenderRef = ref(null)
+const chatSenderRef = ref<HTMLElement | any>(null)
 // 轮询定时器
 let msgTimer: number | null = null
 
@@ -59,7 +58,7 @@ let msgTimer: number | null = null
  * 自动聚焦输入框
  */
 const focusInput = () => {
-  if (chatSenderRef.value) {
+  if (chatSenderRef.value && chatSenderRef.value.$el) {
     // 获取TDesign组件内部的textarea元素并聚焦
     const textarea = chatSenderRef.value.$el.querySelector('textarea')
     if (textarea) {
@@ -180,7 +179,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 64px);
-  background-color: v-bind(isDark ? '#121212' : '#FFFFFF')
+  background-color: var(--td-bg-color-container)
 }
 .chat-box {
   flex: 1;
