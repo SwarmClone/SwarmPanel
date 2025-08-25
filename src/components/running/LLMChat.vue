@@ -147,9 +147,15 @@ const handleSend = async () => {
   inputText.value = ''
 
   try {
-    await http.post('/api')
-    console.log('消息已发送')
-  } catch (err) {
+      // 发送消息内容到服务器
+      await http.post('/api', {
+        message: text,
+        identity: selectedIdentity.value,
+        is_whisper: isWhisper.value,
+        timestamp: Math.floor(Date.now() / 1000)
+      })
+      console.log('消息已发送')
+    } catch (err) {
     console.error('发送失败', err)
     antdMessage.error('发送失败')
   } finally {

@@ -120,8 +120,20 @@ async def get_global_status():
     return {"status": "1"}
 
 @app.post("/api")
-async def api():
-    return {'result': 'sended'}
+async def api(request: Request):
+    # 获取请求数据，处理空请求体的情况
+    try:
+        data = await request.json()
+    except json.JSONDecodeError:
+        data = {"message": "No JSON data received", "timestamp": datetime.now().isoformat()}
+    
+    # 将数据写入messages.py文件
+    messages_file = BASE_DIR / "messages.py"
+    with open(messages_file, "a", encoding="utf-8") as f:
+        f.write(f"# 数据写入时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"received_data = {json.dumps(data, ensure_ascii=False, indent=2)}\n\n")
+    
+    return {'result': 'sended', 'data_saved': True}
 
 
 @app.get("/api/get_messages")
