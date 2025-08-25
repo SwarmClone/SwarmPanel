@@ -5,6 +5,12 @@
     <div ref="chatBox" class="chat-box">
       <template v-for="item in chatMessages" :key="item.id">
         <div :class="['msg-item', item.role]">
+          <div class="msg-header">
+            <span class="msg-identity">
+              {{ item.role === 'llm' ? 'LLM' : (item.identity === 'developer' ? '开发者' : '弹幕') }}
+              <span v-if="item.is_whisper" class="msg-whisper">悄悄话</span>
+            </span>
+          </div>
           <p class="msg-content">{{ item.content }}</p>
           <span class="msg-time">{{ formatTime(item.time) }}</span>
         </div>
@@ -23,6 +29,27 @@
         :loading="loading" 
         @send="handleSend" 
       > 
+        <template #prefix> 
+          <div class="sender-prefix"> 
+            <a-select 
+              v-model:value="selectedIdentity" 
+              size="small" 
+              style="width: 100px; margin-right: 8px;" 
+            > 
+              <a-select-option value="developer">开发者</a-select-option> 
+              <a-select-option value="danmaku">弹幕</a-select-option> 
+            </a-select> 
+            <a-button 
+              v-if="selectedIdentity === 'developer'"
+              :class="{ 'is-active': isWhisper }" 
+              variant="text" 
+              size="small" 
+              @click="toggleWhisper" 
+            > 
+              悄悄话 
+            </a-button> 
+          </div> 
+        </template> 
         <template #suffix> 
           <a-button size="large" class="btn" @click="handleSend"> 
             <template #icon><SendOutlined /></template>
@@ -35,7 +62,7 @@
 
 <script setup lang="ts">
 
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { message as antdMessage } from 'ant-design-vue'
 import { SendOutlined } from '@ant-design/icons-vue'
 import http from '@/api/axios'
@@ -48,12 +75,30 @@ interface ChatMessage {
   role: 'user' | 'llm'
   content: string
   time: number
+  is_whisper?: boolean
+  identity?: 'developer' | 'danmaku'
 }
 
 const chatMessages = ref<ChatMessage[]>([])
 const inputText = ref('')
 const loading = ref(false)
 const chatSenderRef = ref<HTMLElement | any>(null)
+const selectedIdentity = ref<'developer' | 'danmaku'>('developer')
+const isWhisper = ref(false)
+
+// 监听身份变化，从开发者切换到弹幕时自动关闭悄悄话
+watch(selectedIdentity, (newValue, oldValue) => {
+  if (oldValue === 'developer' && newValue === 'danmaku' && isWhisper.value) {
+    isWhisper.value = false
+  }
+})
+
+/**
+ * 切换悄悄话模式
+ */
+const toggleWhisper = () => {
+  isWhisper.value = !isWhisper.value
+}
 // 轮询定时器
 let msgTimer: number | null = null
 
@@ -95,7 +140,9 @@ const handleSend = async () => {
     id: `${Date.now()}-user`,
     role: 'user',
     content: text,
-    time: Math.floor(Date.now() / 1000)
+    time: Math.floor(Date.now() / 1000),
+    is_whisper: isWhisper.value,
+    identity: selectedIdentity.value
   })
   inputText.value = ''
 
@@ -216,12 +263,36 @@ onUnmounted(() => {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 4px;
 }
+.msg-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.msg-identity {
+  font-size: 12px;
+  opacity: 0.7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: v-bind(isDark ? '#333333' : '#F0F0F0');
+}
+
 .msg-time {
   display: block;
   font-size: 12px;
   opacity: 0.6;
   margin-top: 4px;
   text-align: right;
+}
+
+.msg-whisper {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: rgb(66, 113, 255);
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 .chat-input {
   padding: 16px 20px;
@@ -253,8 +324,19 @@ onUnmounted(() => {
   box-shadow: none;
 }
 
+.sender-prefix {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
 .chat-sender .btn.t-button {
   height: var(--td-comp-size-m);
   padding: 0 16px;
+}
+
+.is-active {
+  background-color: rgb(94, 91, 255);
+  color: #ffffff;
 }
 </style>
