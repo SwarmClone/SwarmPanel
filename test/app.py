@@ -154,6 +154,9 @@ async def get_messages():
     messages_buffer.clear()
     return res
 
+# 注意，这个一定要放在SPA路由的前面！！！
+app.mount("/", StaticFiles(directory="dist", html=True), name="static")
+
 # SPA路由
 @app.get("/{path:path}")
 async def serve_spa(request: Request, path: str):

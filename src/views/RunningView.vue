@@ -2,7 +2,7 @@
   <a-config-provider :theme="antdTheme">
     <a-layout style="min-height: 100vh">
       
-      <FilterSidebar />
+      <Sidebar />
       <a-layout>
             <a-layout-content class="main-scroll">
               <div class="header" :style="{ backgroundColor: token.colorBgContainer }">
@@ -33,7 +33,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { theme } from 'ant-design-vue'
 import UnifiedSidebar from '@/components/startup/UnifiedSidebar.vue'
-import FilterSidebar from '@/components/running/FilterSidebar.vue'
+import Sidebar from '@/components/running/Sidebar.vue'
 import LLMChat from '@/components/running/LLMChat.vue'
 import { isDark, antdTheme } from '@/main'
 import { fetchStartupParam } from '@/api/health'
